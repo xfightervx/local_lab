@@ -6,6 +6,7 @@ _SAMPLING_LENGTH = 1000
 def main():
     spark = SparkSession.builder.appName("Sampling_data").getOrCreate()
 
+    # Schema is optional if parquet already has schema, but here’s the corrected version:
     schema = StructType([
         StructField("VendorId", IntegerType(), False),
         StructField("tpep_pickup_datetime", TimestampType(), False),
