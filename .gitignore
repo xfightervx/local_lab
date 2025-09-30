@@ -2,3 +2,4 @@
 goals.txt
 yellow_tripdata_*.parquet
 !.env-template
+!.cloudeflare
