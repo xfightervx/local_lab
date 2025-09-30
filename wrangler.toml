@@ -1,0 +1,3 @@
+[build]
+command = "uv sync --dev && .venv/bin/sphinx-build -b html docs/site/source docs/site/source/build/html"
+output_directory = "docs/_build/html"
