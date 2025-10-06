@@ -38,7 +38,7 @@ def main():
     df_sampled = df.sample(withReplacement=False, fraction=ratio)
     df_sampled.write.mode("overwrite").format("parquet").save(
         "kafka/producer/sample_data/yellow_tripdata_2025-01-sample.parquet"
-    )
+    )\
 
 if __name__ == "__main__":
     main()

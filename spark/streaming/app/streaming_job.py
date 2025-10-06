@@ -18,7 +18,7 @@ from sqlalchemy import create_engine
 def get_config():
     load_dotenv(".env")
     return {
-        "KAFKA_BOOTSTRAP_SERVERS": os.getenv("KAFKA_BOOTSTRAP_SERVERS", "localhost:9092"),
+        "BOOTSTRAP_SERVERS": os.getenv("BOOTSTRAP_SERVERS", "localhost:9092"),
         "KAFKA_TOPIC": os.getenv("KAFKA_TOPIC", "rides_raw"),
         "POSTGRES_HOST": os.getenv("POSTGRES_HOST", "localhost"),
         "POSTGRES_PORT": os.getenv("POSTGRES_PORT", "5432"),
@@ -59,7 +59,8 @@ def write_to_postgres(batch_df: DataFrame, batch_id: int, cfg: dict):
         schema="stg",
         if_exists="append",
         index=False,
-        method="multi"
+        method="multi",
+        chunksize=1000,
     )
     return
 
@@ -68,13 +69,17 @@ def main():
     spark = (
         SparkSession.builder
         .appName("rides_streaming")
+        .config(
+            "spark.jars.packages",
+            "org.apache.spark:spark-sql-kafka-0-10_2.13:3.5.1"
+        )
         .getOrCreate()
     )
 
     raw_df = (
         spark.readStream
         .format("kafka")
-        .option("kafka.bootstrap.servers", cfg["KAFKA_BOOTSTRAP_SERVERS"])
+        .option("kafka.bootstrap.servers", cfg["BOOTSTRAP_SERVERS"])
         .option("subscribe", cfg["KAFKA_TOPIC"])
         .load()
     )

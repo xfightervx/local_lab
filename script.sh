@@ -1,0 +1,1 @@
+# dont  forget to create the database and create the schema stg inside the db and give the neccessary permissions on the schema to the user

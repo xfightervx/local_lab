@@ -13,7 +13,7 @@ import json
 import argparse
 from datetime import datetime
 from glob import glob
-
+from utils.dummies import DummyKafkaProducer
 import pandas as pd
 from kafka import KafkaProducer
 from dotenv import load_dotenv
@@ -30,11 +30,11 @@ def get_config():
     load_dotenv(".env")
     return {
         "BOOTSTRAP_SERVERS": os.getenv("BOOTSTRAP_SERVERS", "localhost:9092"),
-        "TOPIC": os.getenv("TOPIC", "rides_raw"),
+        "TOPIC": os.getenv("KAFKA_TOPIC", "rides_raw"),
         "INPUT_PATH": os.getenv("INPUT_PATH"),
         "TIME_SPEEDUP": float(os.getenv("TIME_SPEEDUP", 1440)),
         "TS_FIELD": os.getenv("TS_FIELD", "tpep_pickup_datetime"),
-        "KEY_FIELD": os.getenv("KEY_FIELD", ""),  # blank means auto-generate
+        "KEY_FIELD": os.getenv("KEY_FIELD", ""), 
         "SLEEP_MIN": float(os.getenv("SLEEP_MIN", 0.0)),
         "MAX_MESSAGES": int(os.getenv("MAX_MESSAGES","")) if os.getenv("MAX_MESSAGES") else None,
         "DRY_RUN": os.getenv("DRY_RUN", "false").lower() == "true",
@@ -58,7 +58,7 @@ def make_payload(row, ts_field, key_field):
         "ingest_time": datetime.utcnow().isoformat(),
         "pickup_zone": str(row.get("PULocationID", "")),
         "dropoff_zone": str(row.get("DOLocationID", "")),
-        "distance_km": float(row.get("trip_distance", 0.0)) * 1.60934,  # miles → km
+        "distance_km": float(row.get("trip_distance", 0.0)) * 1.60934, 
         "fare_usd": float(row.get("fare_amount", 0.0)),
         "payment_type": str(row.get("payment_type", "unknown")),
     }
@@ -88,7 +88,7 @@ def main():
     df = pd.concat(pd.read_parquet(p) for p in paths)
     df = df.sort_values(by=cfg["TS_FIELD"]).reset_index(drop=True)
 
-    producer = None
+    producer = DummyKafkaProducer()
     if not cfg["DRY_RUN"]:
         producer = KafkaProducer(
             bootstrap_servers=cfg["BOOTSTRAP_SERVERS"],
