@@ -3,3 +3,5 @@ goals.txt
 yellow_tripdata_*.parquet
 !.env-template
 !.cloudeflare
+docs/site/source/build/
+docs/site/source/source/api

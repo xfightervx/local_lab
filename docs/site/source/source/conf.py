@@ -1,29 +1,31 @@
-# Configuration file for the Sphinx documentation builder.
-#
-# For the full list of built-in configuration values, see the documentation:
-# https://www.sphinx-doc.org/en/master/usage/configuration.html
+import os
+import sys
+import pathspec
 
-# -- Project information -----------------------------------------------------
-# https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
+# Make sure your project root is accessible
+sys.path.insert(0, os.path.abspath('../../../..'))
 
-project = 'local lab'
-copyright = '2025, souhailLo'
-author = 'souhailLo'
-extensions = ["sphinx.ext.autodoc", "sphinx.ext.napoleon", "sphinx.ext.viewcode"]
-release = '1.0.0'
+extensions = [
+    "sphinx.ext.autodoc",
+    "sphinx.ext.autosummary",
+    "sphinx.ext.napoleon",
+    "sphinx_autodoc_typehints",
+    "myst_parser",
+    "autoapi.extension",
+]
 
-# -- General configuration ---------------------------------------------------
-# https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
+# --- AutoAPI configuration ---
+autoapi_type = "python"
+autoapi_dirs = ["../../../.."]
+autoapi_keep_files = True
+autoapi_add_toctree_entry = True
+autoapi_root = "api"
 
-extensions = []
+# --- Markdown support ---
+source_suffix = {
+    '.rst': 'restructuredtext',
+    '.md': 'markdown',
+}
 
-templates_path = ['_templates']
-exclude_patterns = []
-
-
-
-# -- Options for HTML output -------------------------------------------------
-# https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
-
-html_theme = 'furo'
-html_static_path = ['_static']
+master_doc = "index"
+autoapi_ignore = ["/home/souhail/local_lab/.venv"]

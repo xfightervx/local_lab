@@ -7,11 +7,16 @@ requires-python = ">=3.12"
 dependencies = [
     "kafka>=1.3.5",
     "kafka-python>=2.2.15",
+    "myst-parser>=4.0.1",
     "pandas>=2.3.3",
+    "pathspec>=0.12.1",
     "psycopg2-binary>=2.9.10",
     "pyarrow>=21.0.0",
     "pyspark>=4.0.1",
     "python-dotenv>=1.1.1",
+    "sphinx>=8.2.3",
+    "sphinx-autoapi>=3.6.1",
+    "sphinx-autodoc-typehints>=3.2.0",
     "sqlalchemy>=2.0.43",
 ]
 
