@@ -62,6 +62,7 @@ def write_to_postgres(batch_df: DataFrame, batch_id: int, cfg: dict):
         method="multi",
         chunksize=1000,
     )
+    print(f"batch {batch_id} has been written to the database successfully")
     return
 
 def main():
@@ -69,6 +70,7 @@ def main():
     spark = (
         SparkSession.builder
         .appName("rides_streaming")
+        .master("local[*]")
         .config(
             "spark.jars.packages",
             "org.apache.spark:spark-sql-kafka-0-10_2.13:3.5.1"
