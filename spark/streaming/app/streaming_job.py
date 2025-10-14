@@ -1,11 +1,3 @@
-"""
-Spark Structured Streaming Job
-------------------------------
-Consumes JSON messages from Kafka topic `rides_raw`, parses them into structured
-columns using schema.py + transforms.py, and writes results to Postgres
-(analytics.rides_stream).
-"""
-
 import os
 from dotenv import load_dotenv
 from pyspark.sql import SparkSession, DataFrame
@@ -20,6 +12,7 @@ def get_config():
     return {
         "BOOTSTRAP_SERVERS": os.getenv("BOOTSTRAP_SERVERS", "localhost:9092"),
         "KAFKA_TOPIC": os.getenv("KAFKA_TOPIC", "rides_raw"),
+        "WAREHOUSE_TABLE": os.getenv("WAREHOUSE_TABLE", "stg_cleaned"),
         "POSTGRES_HOST": os.getenv("POSTGRES_HOST", "localhost"),
         "POSTGRES_PORT": os.getenv("POSTGRES_PORT", "5432"),
         "POSTGRES_DB": os.getenv("POSTGRES_DB", "analytics"),
@@ -53,6 +46,7 @@ def write_to_postgres(batch_df: DataFrame, batch_id: int, cfg: dict):
     except :
         print("couldn't create connection with the database")
         return
+    pdf["treated"] = "No"
     pdf.to_sql(
         "rides_stream",
         con=engine,

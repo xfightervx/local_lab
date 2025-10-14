@@ -51,11 +51,13 @@ def make_payload(row, ts_field, key_field):
         return None
     if not isinstance(event_time, datetime):
         event_time = pd.to_datetime(event_time)
+    drop_off_time = pd.to_datetime(row["tpep_dropoff_datetime"])
 
     payload = {
         "ride_id": ride_id,
         "event_time": event_time.isoformat(),
         "ingest_time": datetime.utcnow().isoformat(),
+        "dropoff_time": drop_off_time.isoformat(),
         "pickup_zone": str(row.get("PULocationID", "")),
         "dropoff_zone": str(row.get("DOLocationID", "")),
         "distance_km": float(row.get("trip_distance", 0.0)) * 1.60934, 
